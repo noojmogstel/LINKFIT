@@ -29,5 +29,11 @@ public class ChattingRoom {
         this.trainer = trainer;
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public Trainer getTrainer() {
+        return trainer;
+    }
 }

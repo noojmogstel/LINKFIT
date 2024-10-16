@@ -60,6 +60,9 @@ dependencies {
 
 	//spring sercurity
 	implementation 'org.springframework.security:spring-security-crypto'
+
+	//Websocket
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 tasks.named('test') {

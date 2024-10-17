@@ -32,6 +32,7 @@ public class ChattingRoomService {
         if (!role.equals("user")) {
             throw new PermissionException("Only users can add rooms");
         }
+        //이미 userId, TrainerId 에 해당하는 사용자가 속해있는 대화방이 있는지 확인하는 로직 필요
         User user = getUser(userId);
         Trainer trainer = getTrainer(userId);
         chattingRoomRepository.save(request.toEntity(user, trainer));

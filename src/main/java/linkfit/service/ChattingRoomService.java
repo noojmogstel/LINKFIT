@@ -27,6 +27,12 @@ public class ChattingRoomService {
         this.trainerRepository = trainerRepository;
     }
 
+    //ID로 채팅방 찾기
+    public ChattingRoom findRoomById(Long id) {
+        return chattingRoomRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("ChattingRoom not found"));
+    }
+
     //채팅방 생성
     public void addRoom(Long userId, String role, ChattingRoomRegisterRequest request) {
         if (!role.equals("user")) {

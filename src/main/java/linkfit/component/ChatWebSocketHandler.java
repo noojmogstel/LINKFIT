@@ -1,9 +1,12 @@
 package linkfit.component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collection;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import linkfit.entity.ChattingRoom;
+import linkfit.entity.Message;
+import linkfit.service.ChattingRoomService;
+import linkfit.service.MessageService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -14,10 +17,14 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private final SessionManager sessionManager;
-    private final ObjectMapper objectMapper = new ObjectMapper();  // ObjectMapper 인스턴스
+    private final MessageService messageService;
+    private final ChattingRoomService chattingRoomService;
 
-    public ChatWebSocketHandler(SessionManager sessionManager) {
+    public ChatWebSocketHandler(SessionManager sessionManager, MessageService messageService,
+        ChattingRoomService chattingRoomService) {
         this.sessionManager = sessionManager;
+        this.messageService = messageService;
+        this.chattingRoomService = chattingRoomService;
     }
 
     @Override
@@ -36,14 +43,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String path = session.getUri().getPath();
         Long roomId = extractRoomIdFromPath(path);
         Long userId = extractUserIdFromPath(path);
-        String role = extractRoleFromPath(path); // role 추출
-
-        // 메시지 처리
-        JsonNode jsonNode = objectMapper.readTree(message.getPayload());  // JSON 파싱
-        String content = jsonNode.get("content").asText();  // content 필드 추출
+        String role = extractRoleFromPath(path);
 
         // 같은 방에 있는 모든 사용자에게 메시지 브로드캐스트
-        broadcastMessageToRoom(roomId, new TextMessage(message.getPayload()));
+        broadcastMessageToRoom(roomId, new TextMessage(message.getPayload()),role);
     }
 
     @Override
@@ -72,10 +75,14 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     }
 
     // 방에 있는 사용자들에게 메시지를 브로드캐스트하는 메서드
-    private void broadcastMessageToRoom(Long roomId, TextMessage message) throws IOException {
+    private void broadcastMessageToRoom(Long roomId, TextMessage message,String role) throws IOException {
         Collection<WebSocketSession> sessions = sessionManager.getSessions(roomId);
         for (WebSocketSession webSocketSession : sessions) {
             if (webSocketSession.isOpen()) {
+                ChattingRoom chattingRoom = chattingRoomService.findRoomById(roomId);
+                Message messages = new Message(chattingRoom, message.getPayload(), role,
+                    LocalDateTime.now());
+                messageService.addMessage(messages);
                 webSocketSession.sendMessage(message);
             }
         }

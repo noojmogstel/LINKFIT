@@ -5,7 +5,6 @@ import linkfit.annotation.Login;
 import linkfit.controller.Swagger.ChattingControllerDocs;
 import linkfit.dto.ChatResponse;
 import linkfit.dto.ChattingRoomResponse;
-import linkfit.dto.MessageResponse;
 import linkfit.dto.Token;
 import linkfit.service.ChattingService;
 import org.springframework.http.HttpStatus;

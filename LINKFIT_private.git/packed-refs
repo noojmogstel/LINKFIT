@@ -1,0 +1,5 @@
+# pack-refs with: peeled fully-peeled sorted 
+31ead729095f7eef6a7c4abc199de5bdc4644de8 refs/heads/Master
+a867fa6d5a648dd091bafb5650f8fbd4e796466b refs/heads/Weekly7
+91ef9e2a168473d8b76a65c916af442428aa8157 refs/heads/feat/Chatting
+31ead729095f7eef6a7c4abc199de5bdc4644de8 refs/heads/feature/Chat

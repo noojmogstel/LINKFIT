@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import linkfit.dto.ChattingRoomResponse;
 
 @Entity
 @Table(name = "CHATTING_ROOM_TB")
@@ -29,11 +30,29 @@ public class ChattingRoom {
         this.trainer = trainer;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public User getUser() {
         return user;
     }
 
     public Trainer getTrainer() {
         return trainer;
+    }
+
+    public ChattingRoomResponse toUserDto(Message message) {
+        if(message == null) {
+            return new ChattingRoomResponse(id, trainer.getName(), trainer.getProfileImageUrl(), null, null);
+        }
+        return new ChattingRoomResponse(id, trainer.getName(), trainer.getProfileImageUrl(), message.getContent(), message.getSender());
+    }
+
+    public ChattingRoomResponse toTrainerDto(Message message) {
+        if(message == null) {
+            return new ChattingRoomResponse(id, user.getName(), user.getProfileImageUrl(), null, null);
+        }
+        return new ChattingRoomResponse(id, user.getName(), user.getProfileImageUrl(), message.getContent(), message.getSender());
     }
 }

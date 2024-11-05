@@ -1,10 +1,12 @@
 package linkfit.service;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
-import linkfit.dto.ProgressPtDetailResponse;
+import linkfit.dto.PtUserProfileResponse;
 import linkfit.dto.ProgressPtListResponse;
 import linkfit.dto.PtSuggestionRequest;
 import linkfit.dto.ReceivePtSuggestResponse;
+import linkfit.dto.ScheduleResponse;
 import linkfit.dto.SendPtSuggestResponse;
 import linkfit.dto.UserPtResponse;
 import linkfit.entity.Pt;
@@ -30,15 +32,17 @@ public class PtService {
     private final UserRepository userRepository;
     private final TrainerRepository trainerRepository;
     private final PreferenceRepository preferenceRepository;
+    private final ScheduleService scheduleService;
 
     public PtService(PtRepository ptRepository, ScheduleRepository scheduleRepository,
         UserRepository userRepository, TrainerRepository trainerRepository,
-        PreferenceRepository preferenceRepository) {
+        PreferenceRepository preferenceRepository, ScheduleService scheduleService) {
         this.ptRepository = ptRepository;
         this.scheduleRepository = scheduleRepository;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.preferenceRepository = preferenceRepository;
+        this.scheduleService = scheduleService;
     }
 
     public List<ProgressPtListResponse> getTrainerProgressPt(Long trainerId, Pageable pageable) {
@@ -78,6 +82,7 @@ public class PtService {
             .toList();
     }
 
+    @Transactional
     public void approvalSuggestion(Long userId, Long ptId) {
         User user = getUser(userId);
         List<Pt> ptList = ptRepository.findByUser(user);
@@ -122,16 +127,15 @@ public class PtService {
             .orElseThrow(() -> new NotFoundException("not.found.pt"));
     }
 
-    public ProgressPtDetailResponse getProgressUserDetails(Long trainerId, Long ptId) {
+    public PtUserProfileResponse getProgressPtDetails(Long trainerId, Long ptId) {
         Trainer trainer = getTrainer(trainerId);
         Pt pt = findSuggestion(ptId);
         if (!pt.getTrainer().equals(trainer)) {
             throw new PermissionException("not.owner");
         }
         User user = pt.getUser();
-        List<Schedule> schedules = scheduleRepository.findAllByPt(pt);
-        return new ProgressPtDetailResponse(user.getId(), user.getName(), user.getProfileImageUrl(),
-            schedules);
+        List<ScheduleResponse> schedules = scheduleService.getSchedules(ptId);
+        return new PtUserProfileResponse(user.getId(), user.getName(), user.getProfileImageUrl(), schedules);
     }
 
     private Trainer getTrainer(Long trainerId) {

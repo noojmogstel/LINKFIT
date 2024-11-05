@@ -1,5 +1,6 @@
 package linkfit.service;
 
+import linkfit.component.DefaultImageProvider;
 import linkfit.dto.LoginRequest;
 import linkfit.dto.TokenResponse;
 import linkfit.dto.UserProfileRequest;
@@ -10,6 +11,7 @@ import linkfit.exception.DuplicateException;
 import linkfit.exception.NotFoundException;
 import linkfit.exception.PermissionException;
 import linkfit.repository.UserRepository;
+import linkfit.status.Role;
 import linkfit.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,13 +25,16 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final ImageUploadService imageUploadService;
     private final PasswordEncoder passwordEncoder;
+    private final DefaultImageProvider defaultImageProvider;
 
     public UserService(UserRepository userRepository, JwtUtil jwtUtil,
-        ImageUploadService imageUploadService, PasswordEncoder passwordEncoder) {
+        ImageUploadService imageUploadService, PasswordEncoder passwordEncoder,
+        DefaultImageProvider defaultImageProvider) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.imageUploadService = imageUploadService;
         this.passwordEncoder = passwordEncoder;
+        this.defaultImageProvider = defaultImageProvider;
     }
 
     @Transactional
@@ -37,15 +42,16 @@ public class UserService {
         validateEmailAlreadyExist(request.email());
         String encodedPassword = passwordEncoder.encode(request.password());
         User user = request.toEntity(encodedPassword);
+        user.setProfileImageUrl(defaultImageProvider.getDefaultImageUrl());
         userRepository.save(user);
     }
 
     public TokenResponse login(LoginRequest request) {
         User user = getUserByEmail(request.email());
-        if (!userAuthenticate(user, request.password())) {
+        if (!authenticateUser(user, request.password())) {
             throw new PermissionException("not.match.password");
         }
-        return new TokenResponse(jwtUtil.generateToken("user", user.getId(), user.getEmail()));
+        return new TokenResponse(jwtUtil.generateToken(Role.USER, user.getId(), user.getEmail()));
     }
 
 
@@ -77,7 +83,7 @@ public class UserService {
         }
     }
 
-    private boolean userAuthenticate(User user, String rawPassword) {
+    private boolean authenticateUser(User user, String rawPassword) {
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 

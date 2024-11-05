@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import linkfit.dto.ScheduleResponse;
 
 @Entity
 @Table(name = "SCHEDULE_TB")
@@ -22,30 +23,26 @@ public class Schedule {
     @JoinColumn(nullable = false)
     private Pt pt;
 
-    private String content;
-
     @Column(nullable = false)
-    private LocalDateTime atTime;
+    private LocalDateTime date;
 
     private boolean isCompleted = Boolean.FALSE;
 
     protected Schedule() {
     }
 
-    public Schedule(Pt pt, LocalDateTime atTime) {
+    public Schedule(Pt pt, LocalDateTime date) {
         this.pt = pt;
-        this.atTime = atTime;
-    }
-
-    public Schedule(Pt pt, LocalDateTime atTime, String content) {
-        this.pt = pt;
-        this.atTime = atTime;
-        this.content = content;
+        this.date = date;
     }
 
     public Pt getPt() {
         return pt;
     }
+
+    public LocalDateTime getDate() {
+        return date;
+    };
 
     public boolean getIsCompleted() {
         return isCompleted;
@@ -53,5 +50,9 @@ public class Schedule {
 
     public void complete() {
         this.isCompleted = Boolean.TRUE;
+    }
+
+    public ScheduleResponse toDto(){
+        return new ScheduleResponse(isCompleted,date);
     }
 }

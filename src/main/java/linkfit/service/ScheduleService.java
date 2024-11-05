@@ -23,10 +23,12 @@ public class ScheduleService {
         this.ptRepository = ptRepository;
     }
 
-    public ScheduleResponse getSchedules(Long ptId) {
+    public List<ScheduleResponse> getSchedules(Long ptId) {
         Pt pt = getPtById(ptId);
         List<Schedule> schedules = scheduleRepository.findAllByPt(pt);
-        return new ScheduleResponse(pt.getTotalCount(), schedules);
+        return schedules.stream()
+            .map(Schedule::toDto)
+            .toList();
     }
 
     public void registerSchedule(Long trainerId, Long ptId, ScheduleRequest scheduleRequest) {

@@ -33,7 +33,7 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-            .title("CICD TEST") // API의 제목
+            .title("LINKFIT API") // API의 제목
             .description("PT 매칭 서비스 LINKFIT의 API입니다.") // API에 대한 설명
             .version("1.0.0"); // API의 버전
     }

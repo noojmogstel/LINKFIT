@@ -59,7 +59,23 @@ management:
   endpoints:
     web:
       exposure:
-        include: prometheus, health, info
+        include: prometheus, health, info, httpexchanges
   metrics:
     tags:
       application: linkfit
+  endpoint:
+    info:
+      enabled: true
+    refresh:
+      enabled: true
+    health:
+      enabled: true
+    beans:
+      enabled: true
+    httpexchanges:
+      enabled: true
+
+logging:
+  level:
+    org.springframework.web: DEBUG  # HTTP 요청/응답에 대한 디버그 로그 활성화
+    com.example.yourapp: DEBUG

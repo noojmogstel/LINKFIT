@@ -16,6 +16,7 @@ import linkfit.repository.BodyInfoRepository;
 import linkfit.repository.PreferenceRepository;
 import linkfit.status.TrainerGender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

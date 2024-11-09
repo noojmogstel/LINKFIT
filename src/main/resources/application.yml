@@ -74,8 +74,3 @@ management:
       enabled: true
     httpexchanges:
       enabled: true
-
-logging:
-  level:
-    org.springframework.web: DEBUG  # HTTP 요청/응답에 대한 디버그 로그 활성화
-    com.example.yourapp: DEBUG

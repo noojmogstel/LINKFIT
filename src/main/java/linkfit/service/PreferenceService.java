@@ -18,6 +18,7 @@ import linkfit.status.TrainerGender;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class PreferenceService {
 
     private final PreferenceRepository preferenceRepository;

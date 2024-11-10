@@ -13,11 +13,13 @@ import linkfit.exception.PermissionException;
 import linkfit.repository.UserRepository;
 import linkfit.status.Role;
 import linkfit.util.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 @Transactional
 public class UserService {
@@ -48,7 +50,9 @@ public class UserService {
     }
 
     public TokenResponse login(LoginRequest request) {
+        log.info("Log: email: ",request.email());
         User user = getUserByEmail(request.email());
+        log.info("Log: user: ",user.getEmail());
         if (!authenticateUser(user, request.password())) {
             throw new PermissionException("not.match.password");
         }

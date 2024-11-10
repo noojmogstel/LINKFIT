@@ -8,6 +8,7 @@ import linkfit.dto.TrainerRegisterRequest;
 import linkfit.dto.UserRegisterRequest;
 import linkfit.service.TrainerService;
 import linkfit.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/auth")
+@Slf4j
 public class AuthController implements AuthControllerDocs {
 
     private final UserService userService;
@@ -39,6 +41,9 @@ public class AuthController implements AuthControllerDocs {
 
     @PostMapping("/user/login")
     public ResponseEntity<TokenResponse> loginUser(@Valid @RequestBody LoginRequest request) {
+        log.info("Log: request: ",request.email());
+        log.info("Log: request: ",request.password());
+
         TokenResponse token = userService.login(request);
         return ResponseEntity.status(HttpStatus.OK)
             .body(token);

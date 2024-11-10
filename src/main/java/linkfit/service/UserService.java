@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -37,7 +38,7 @@ public class UserService {
         this.defaultImageProvider = defaultImageProvider;
     }
 
-    @Transactional
+
     public void register(UserRegisterRequest request) {
         validateEmailAlreadyExist(request.email());
         String encodedPassword = passwordEncoder.encode(request.password());

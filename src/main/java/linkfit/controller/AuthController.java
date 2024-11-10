@@ -41,8 +41,8 @@ public class AuthController implements AuthControllerDocs {
 
     @PostMapping("/user/login")
     public ResponseEntity<TokenResponse> loginUser(@Valid @RequestBody LoginRequest request) {
-        log.info("Log: request: ",request.email());
-        log.info("Log: request: ",request.password());
+        log.info("Log: request: {}",request.email());
+        log.info("Log: request: {}",request.password());
 
         TokenResponse token = userService.login(request);
         return ResponseEntity.status(HttpStatus.OK)

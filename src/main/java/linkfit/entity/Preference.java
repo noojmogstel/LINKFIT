@@ -38,7 +38,7 @@ public class Preference {
     private TrainerGender gender;
 
     @Column(nullable = false)
-    private int range;
+    private Integer range;
 
     @Column(nullable = false)
     private String goal;

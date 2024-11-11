@@ -56,7 +56,7 @@ public class Preference {
     protected Preference() {
     }
 
-    public int getRange() {
+    public Integer getRange() {
         return range;
     }
 

@@ -37,7 +37,7 @@ public class Preference {
     @Enumerated(EnumType.STRING)
     private TrainerGender gender;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "`range`")
     private Integer range;
 
     @Column(nullable = false)

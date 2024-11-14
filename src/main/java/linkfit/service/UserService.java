@@ -50,9 +50,7 @@ public class UserService {
     }
 
     public TokenResponse login(LoginRequest request) {
-        log.info("Log: email: {} ",request.email());
         User user = getUserByEmail(request.email());
-        log.info("Log: user: {}",user.getEmail());
         if (!authenticateUser(user, request.password())) {
             throw new PermissionException("not.match.password");
         }

@@ -1,5 +1,6 @@
 package linkfit.service;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import linkfit.dto.ScheduleRequest;
@@ -13,6 +14,7 @@ import linkfit.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
